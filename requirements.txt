@@ -1,0 +1,11 @@
+torch #pytorch딥러닝
+torchvision #이미지데이터,ResNet,transform
+wandb #실험 기록
+scikit-learn #평가 지표
+numpy #배열 계산
+pandas #데이터 정리
+matplotlib #이미지/그래프 출력
+pillow #이미지 읽기
+jupyter #Notebook
+ipykernel #VSCode Notebook 커널
+tqdm #진행률 표시
