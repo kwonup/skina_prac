@@ -97,35 +97,21 @@ def train_one_epoch(
         optimizer.step()
 
         # batch loss에 이미지 수를 곱해 누적한 뒤, 마지막에 전체 이미지 수로 나눈다.
-        running_loss += (
-            loss.item()
-            * images.size(0)
-        )
+        running_loss += (loss.item()* images.size(0))
 
         # 가장 큰 logit의 인덱스를 모델의 최종 예측 class로 사용한다.
-        predictions = outputs.argmax(
-            dim=1
-        )
+        predictions = outputs.argmax(dim=1)
 
-        correct += (
-            predictions == labels
-        ).sum().item()
+        correct += (predictions == labels).sum().item()
 
         total += labels.size(0)
 
     # 모든 batch를 합친 epoch 단위 평균 loss와 accuracy를 만든다.
-    epoch_loss = (
-        running_loss / total
-    )
+    epoch_loss = (running_loss / total)
 
-    epoch_accuracy = (
-        correct / total
-    )
+    epoch_accuracy = (correct / total)
 
-    return (
-        epoch_loss,
-        epoch_accuracy
-    )
+    return (epoch_loss,epoch_accuracy)
 
 
 def validate(
@@ -153,38 +139,21 @@ def validate(
             # Forward와 metric 계산은 학습과 같지만 backward/optimizer.step은 수행하지 않는다.
             outputs = model(images)
 
-            loss = criterion(
-                outputs,
-                labels
-            )
+            loss = criterion( outputs,labels)
 
-            running_loss += (
-                loss.item()
-                * images.size(0)
-            )
+            running_loss += (loss.item()* images.size(0))
 
-            predictions = outputs.argmax(
-                dim=1
-            )
+            predictions = outputs.argmax(dim=1)
 
-            correct += (
-                predictions == labels
-            ).sum().item()
+            correct += (predictions == labels).sum().item()
 
             total += labels.size(0)
 
-    epoch_loss = (
-        running_loss / total
-    )
+    epoch_loss = (running_loss / total)
 
-    epoch_accuracy = (
-        correct / total
-    )
+    epoch_accuracy = (correct / total)
 
-    return (
-        epoch_loss,
-        epoch_accuracy
-    )
+    return (epoch_loss,epoch_accuracy)
 
 
 def main():
@@ -205,19 +174,9 @@ def main():
     )
 
     # 2) 전처리된 train/validation 데이터를 batch 단위로 불러온다.
-    (
-        train_loader,
-        val_loader,
-        _,
-        class_names
-    ) = create_dataloaders(
-        batch_size=batch_size
-    )
+    (train_loader,val_loader,_,class_names) = create_dataloaders(batch_size=batch_size)
 
-    print(
-        "Classes:",
-        class_names
-    )
+    print("Classes:",class_names)
 
     # 3) 폴더에서 읽은 실제 클래스 수에 맞춰 ResNet18의 출력층을 만든다.
     model = create_model(
@@ -332,15 +291,9 @@ def main():
         })
 
         # 10) validation accuracy가 기존 최고 기록을 넘었을 때만 checkpoint를 갱신한다.
-        if (
-            val_accuracy
-            > best_val_accuracy
-        ):
-
-            best_val_accuracy = (
-                val_accuracy
-            )
-
+        if (val_accuracy> best_val_accuracy):
+            
+            best_val_accuracy = (val_accuracy)
             # 가중치뿐 아니라 예측 결과를 해석할 class_names와 성능 정보도 함께 저장한다.
             torch.save(
                 {
@@ -360,14 +313,9 @@ def main():
                 MODEL_PATH
             )
 
-            print(
-                "Best model saved!"
-            )
+            print("Best model saved!")
 
-    print(
-        "\nBest Validation Accuracy:",
-        best_val_accuracy
-    )
+    print("\nBest Validation Accuracy:",best_val_accuracy)
 
     # W&B run을 명시적으로 종료해 모든 로그가 전송되도록 한다.
     run.finish()
