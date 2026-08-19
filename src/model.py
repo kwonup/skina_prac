@@ -16,11 +16,15 @@ from torchvision.models import (
 )
 
 
-def create_model(num_classes=15):
-    """사전학습 ResNet18의 마지막 분류기만 현재 클래스 수에 맞춰 교체한다."""
+def create_model(num_classes=15, pretrained=True):
+    """ResNet18의 마지막 분류기만 현재 클래스 수에 맞춰 교체한다.
 
-    # ImageNet으로 사전학습된 가중치를 내려받아 초기 특징 추출 성능을 활용한다.
-    weights = ResNet18_Weights.DEFAULT
+    학습 시에는 ImageNet 사전학습 가중치를 사용하고, 저장된 checkpoint를
+    불러오는 추론/Grad-CAM 시에는 다운로드가 필요 없도록 pretrained=False를 쓴다.
+    """
+
+    # 학습 시작 시에는 사전학습 가중치를, checkpoint 복원 시에는 빈 구조만 만든다.
+    weights = ResNet18_Weights.DEFAULT if pretrained else None
 
     model = resnet18(
         weights=weights
